@@ -1,6 +1,6 @@
-package com.sachin.user.security;
+package com.sachin.course.security;
 
-import com.sachin.user.service.JwtService;
+import com.sachin.course.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,6 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
 
     @jakarta.annotation.PostConstruct
     public void init() {

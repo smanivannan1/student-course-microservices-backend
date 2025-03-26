@@ -1,6 +1,6 @@
-package com.sachin.user.security;
+package com.sachin.enrollment.security;
 
-import com.sachin.user.service.JwtService;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,12 +21,12 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
 
-    @jakarta.annotation.PostConstruct
+    @PostConstruct
     public void init() {
         System.out.println("🔥 JwtAuthenticationFilter INITED in " + this.getClass().getSimpleName());
     }
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -43,16 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("❌ No token provided or bad Authorization header. Rejecting request.");
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7); // remove "Bearer "
+        jwt = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwt);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // ✅ temporarily comment out expiration check for testing
-            // if (!jwtService.isTokenExpired(jwt)) {
             String role = jwtService.extractRole(jwt);
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
 
@@ -64,9 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("🛠️ Setting authentication for: " + userEmail + " with role: " + role);
             SecurityContextHolder.getContext().setAuthentication(authToken);
             System.out.println("✅ SecurityContext set. Authorities = " + authToken.getAuthorities());
-            // }
         }
-
 
         filterChain.doFilter(request, response);
     }

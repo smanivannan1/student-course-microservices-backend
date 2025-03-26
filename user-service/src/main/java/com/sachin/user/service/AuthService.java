@@ -35,6 +35,7 @@ public class AuthService {
                 request.getRole()
         );
         userRepository.save(user);
+
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole().name());
 
