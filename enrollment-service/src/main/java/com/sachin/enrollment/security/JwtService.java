@@ -25,8 +25,11 @@ public class JwtService {
     }
 
     public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
+        String role = extractAllClaims(token).get("role", String.class);
+        System.out.println("🎯 JwtService.extractRole() = " + role);
+        return role;
     }
+
 
     public boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new java.util.Date());

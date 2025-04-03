@@ -67,4 +67,11 @@ public class UserController {
     public String testStudentEndpoint() {
         return "Hello student!";
     }
+
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @GetMapping("/search")
+    public ResponseEntity<UserDto> searchUser(@RequestParam String query) {
+        UserDto user = userService.searchByUsernameOrNameOrEmail(query.trim());
+        return ResponseEntity.ok(user);
+    }
 }

@@ -69,4 +69,11 @@ public class UserServiceimpl implements UserService{
 
         userRepository.deleteById(userId);
     }
+
+    public UserDto searchByUsernameOrNameOrEmail(String query) {
+        User user = userRepository.findByUsernameIgnoreCaseOrNameIgnoreCaseOrEmailIgnoreCase(query, query, query)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return UserMapper.maptoUserDto(user);
+    }
+
 }

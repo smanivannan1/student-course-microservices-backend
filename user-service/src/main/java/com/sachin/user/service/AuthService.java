@@ -33,11 +33,13 @@ public class AuthService {
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
                 request.getRole()
+
         );
         userRepository.save(user);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole().name());
+        claims.put("userId", user.getId());
 
         var token = jwtService.generateToken(claims, user);
         return new AuthResponseDto(token);
@@ -54,6 +56,7 @@ public class AuthService {
                 .orElseThrow();
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole());
+        claims.put("userId", user.getId());
         var token = jwtService.generateToken(claims, user);
         return new AuthResponseDto(token);
     }

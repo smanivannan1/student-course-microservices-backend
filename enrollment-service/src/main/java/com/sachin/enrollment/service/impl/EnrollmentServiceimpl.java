@@ -14,10 +14,15 @@ import com.sachin.enrollment.mapper.EnrollmentMapper;
 import com.sachin.enrollment.repository.EnrollmentRepository;
 import com.sachin.enrollment.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.sachin.enrollment.messaging.EnrollmentEventPublisher;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 
@@ -35,6 +40,13 @@ public class EnrollmentServiceimpl implements EnrollmentService {
             throw new IllegalStateException("Only students may enroll in courses");
         }
 
+        Optional<Enrollment> existing = enrollmentRepository
+                .findByUserIdAndCourseIdAndStatus(studentId, courseId, EnrollmentStatus.ACTIVE);
+
+        if (existing.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Student is already enrolled in this course.");
+        }
+
         CourseDto course = courseClient.getCourseById(courseId);
 
         Enrollment enrollment = new Enrollment();
@@ -45,27 +57,31 @@ public class EnrollmentServiceimpl implements EnrollmentService {
 
         Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
 
-        enrollmentEventPublisher.sendEnrollmentNotification(
-                student.getName() + " has sucessfully been enrolled in course " + course.getCourseCode()+": "+ course.getCourseName()
-        );
+        String message = student.getName() + " has successfully been enrolled in course " +
+                course.getCourseCode() + ": " + course.getCourseName();
+
+        try {
+            enrollmentEventPublisher.sendEnrollmentNotification(message);
+        } catch (Exception e) {
+            System.err.println("⚠️ Failed to send enrollment notification: " + e.getMessage());
+        }
+
         return EnrollmentMapper.mapToEnrollmentDto(savedEnrollment);
     }
 
     @Override
     public String unenrollStudent(Long studentId, Long courseId) {
-        // ✅ Validate that the student exists and is a student
         UserDto student = userClient.getUserById(studentId);
         if (!student.getRole().equalsIgnoreCase("STUDENT")) {
             throw new IllegalStateException("Only students can be unenrolled from courses.");
         }
 
-        // ✅ Validate that the course exists
         CourseDto course = courseClient.getCourseById(courseId);
-        // ✅ Find enrollments by userId and courseId
         List<Enrollment> enrollments = enrollmentRepository.findByUserIdAndCourseId(studentId, courseId);
         if (enrollments.isEmpty()) {
             throw new IllegalStateException("No enrollment found for student ID: " + studentId + " and course ID: " + courseId);
         }
+
         boolean alreadyUnenrolled = true;
         for (Enrollment enrollment : enrollments) {
             if (enrollment.getStatus() == EnrollmentStatus.ACTIVE) {
@@ -74,20 +90,27 @@ public class EnrollmentServiceimpl implements EnrollmentService {
                 alreadyUnenrolled = false;
             }
         }
-        if (alreadyUnenrolled) {
 
-            String alreadyUnenrolledMessage = student.getName() + " is already unenrolled from this course.";
-            enrollmentEventPublisher.sendEnrollmentNotification(alreadyUnenrolledMessage);
-            return alreadyUnenrolledMessage;
+        String message;
+        if (alreadyUnenrolled) {
+            message = student.getName() + " is already unenrolled from this course.";
+        } else {
+            message = student.getName() + " has been successfully unenrolled from " + course.getCourseName();
         }
 
-        String unenrollmentMessage = student.getName() + " has been successfully unenrolled from " + course.getCourseName();
-        enrollmentEventPublisher.sendEnrollmentNotification(unenrollmentMessage);
-        return unenrollmentMessage;
+        // 🛡️ Protect the event publishing
+        try {
+            enrollmentEventPublisher.sendEnrollmentNotification(message);
+        } catch (Exception e) {
+            System.err.println("⚠️ Failed to send unenrollment notification: " + e.getMessage());
+            // Optional: log to file or monitoring service
+        }
+
+        return message;
     }
 
     @Override
-    public List<EnrollmentDto> getEnrolledCoursesforStudent(Long studentId) {
+    public List<CourseDto> getEnrolledCoursesforStudent(Long studentId) {
         // ✅ Validate that the student exists
         UserDto student = userClient.getUserById(studentId);
         if (!student.getRole().equalsIgnoreCase("STUDENT")) {
@@ -99,10 +122,9 @@ public class EnrollmentServiceimpl implements EnrollmentService {
         if (enrollmentList.isEmpty()) {
             throw new IllegalStateException("No active enrollments found for student ID: " + studentId);
         }
-
         // ✅ Map to DTOs
         return enrollmentList.stream()
-                .map(EnrollmentMapper::mapToEnrollmentDto)
+                .map(enrollment -> courseClient.getCourseById(enrollment.getCourseId()))
                 .toList();
     }
 
@@ -118,7 +140,5 @@ public class EnrollmentServiceimpl implements EnrollmentService {
                 .map(EnrollmentMapper::mapToEnrollmentDto)
                 .toList();
     }
-
-
 
 }

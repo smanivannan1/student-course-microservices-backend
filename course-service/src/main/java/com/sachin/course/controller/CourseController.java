@@ -35,6 +35,7 @@ public class CourseController {
         return ResponseEntity.ok(courseDtoList);
     }
 
+
     //Find a course by ID
     @PreAuthorize("hasRole('STUDENT') or hasRole('INSTRUCTOR')")
     @GetMapping("/{id}")

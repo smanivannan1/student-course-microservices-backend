@@ -27,7 +27,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @jakarta.annotation.PostConstruct
     public void init() {
-        System.out.println("🔥 JwtAuthenticationFilter INITED in " + this.getClass().getSimpleName());
+        System.out.println("🔥 JwtAuthenticationFilter CHECK CHANGES " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        final String path = request.getServletPath();
+        System.out.println("Request path: " + path);
+        return path.startsWith("/api/auth/login") || path.startsWith("/api/auth/register");
     }
     @Override
     protected void doFilterInternal(

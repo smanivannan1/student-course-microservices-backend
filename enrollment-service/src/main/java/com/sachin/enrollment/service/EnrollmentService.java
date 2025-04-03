@@ -1,6 +1,8 @@
 package com.sachin.enrollment.service;
 
+import com.sachin.enrollment.dto.CourseDto;
 import com.sachin.enrollment.dto.EnrollmentDto;
+import com.sachin.enrollment.dto.UserDto;
 
 import java.util.List;
 
@@ -10,7 +12,7 @@ public interface EnrollmentService {
 
     String unenrollStudent(Long studentId, Long courseId);
 
-    List<EnrollmentDto> getEnrolledCoursesforStudent(Long studentId);
+    List<CourseDto> getEnrolledCoursesforStudent(Long studentId);
 
     List<EnrollmentDto> getAllEnrollments();
 

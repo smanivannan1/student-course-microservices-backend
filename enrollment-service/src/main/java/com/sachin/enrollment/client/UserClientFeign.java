@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "user-service") // Name should match the service name registered in Eureka
+@FeignClient(name = "user-service")
 public interface UserClientFeign {
 
     @GetMapping("/api/users/{id}")

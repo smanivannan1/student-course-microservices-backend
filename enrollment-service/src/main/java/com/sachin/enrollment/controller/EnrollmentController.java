@@ -1,5 +1,7 @@
 package com.sachin.enrollment.controller;
 
+import com.sachin.enrollment.dto.CourseDto;
+import com.sachin.enrollment.dto.UserDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.sachin.enrollment.dto.EnrollmentDto;
@@ -28,7 +30,7 @@ public class EnrollmentController {
         EnrollmentDto savedEnrollment = enrollmentService.enrollStudent(studentId, courseId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEnrollment);
     }
-    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @PreAuthorize("hasRole('INSTRUCTOR') or hasRole('STUDENT')")
     @DeleteMapping("/{studentId}/{courseId}")
     public ResponseEntity<String> unenrollStudent(
             @PathVariable Long studentId,
@@ -40,10 +42,10 @@ public class EnrollmentController {
 
     @PreAuthorize("hasRole('STUDENT') or hasRole('INSTRUCTOR')")
     @GetMapping("/{studentId}")
-    public ResponseEntity<List<EnrollmentDto>> getEnrolledCoursesForStudent(
+    public ResponseEntity<List<CourseDto>> getEnrolledCoursesForStudent(
             @PathVariable Long studentId
     ) {
-        List<EnrollmentDto> list = enrollmentService.getEnrolledCoursesforStudent(studentId);
+        List<CourseDto> list = enrollmentService.getEnrolledCoursesforStudent(studentId);
         return ResponseEntity.ok(list);
     }
 
@@ -68,3 +70,4 @@ public class EnrollmentController {
         return ResponseEntity.ok("✅ INSTRUCTOR access confirmed.");
     }
 }
+

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotificationListener {
 
+
+
     @RabbitListener(queues = "${rabbitmq.queue}")
     public void handleCourseNotification(String message) {
         System.out.println("Received course notification: " + message);
