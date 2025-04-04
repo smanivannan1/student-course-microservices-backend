@@ -8,7 +8,6 @@ A full-stack web application built with **Spring Boot Microservices**, **Postgre
 - **User Authentication**: JWT-based login system with secure registration and role assignment for students and instructors
 - **Course Management**: Instructors can create, update, delete, and manage courses
 - **Course Enrollment**: Students can browse courses and enroll or unenroll
-- **Progress Tracking**: Users can track their progress through individual courses
 - **Role-Based Access Control**: Separate access flows and permissions for students and instructors
 - **Service Communication**: Microservices communicate via REST (using Feign clients)
 - **API Gateway & Service Discovery**: Routes traffic using Spring Cloud Gateway with dynamic service registration via Eureka
