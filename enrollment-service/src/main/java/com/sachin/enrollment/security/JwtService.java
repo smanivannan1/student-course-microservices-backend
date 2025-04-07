@@ -26,7 +26,7 @@ public class JwtService {
 
     public String extractRole(String token) {
         String role = extractAllClaims(token).get("role", String.class);
-        System.out.println("🎯 JwtService.extractRole() = " + role);
+        System.out.println("JwtService.extractRole() = " + role);
         return role;
     }
 

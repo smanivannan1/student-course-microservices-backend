@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @jakarta.annotation.PostConstruct
     public void init() {
-        System.out.println("🔥 JwtAuthenticationFilter CHECK CHANGES " + this.getClass().getSimpleName());
+        System.out.println("JwtAuthenticationFilter CHECK CHANGES " + this.getClass().getSimpleName());
     }
 
     @Override
@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        System.out.println("🧪 JWT Filter triggered for path: " + request.getRequestURI());
+        System.out.println("JWT Filter triggered for path: " + request.getRequestURI());
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
@@ -70,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             System.out.println("🛠️ Setting authentication for: " + userEmail + " with role: " + role);
             SecurityContextHolder.getContext().setAuthentication(authToken);
-            System.out.println("✅ SecurityContext set. Authorities = " + authToken.getAuthorities());
+            System.out.println("SecurityContext set. Authorities = " + authToken.getAuthorities());
             // }
         }
 

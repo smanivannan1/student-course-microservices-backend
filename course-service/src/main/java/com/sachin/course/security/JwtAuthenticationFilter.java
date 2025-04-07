@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @jakarta.annotation.PostConstruct
     public void init() {
-        System.out.println("🔥 JwtAuthenticationFilter INITED in " + this.getClass().getSimpleName());
+        System.out.println("JwtAuthenticationFilter INITED in " + this.getClass().getSimpleName());
     }
     @Override
     protected void doFilterInternal(
@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        System.out.println("🧪 JWT Filter triggered for path: " + request.getRequestURI());
+        System.out.println("JWT Filter triggered for path: " + request.getRequestURI());
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
@@ -50,8 +50,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         userEmail = jwtService.extractUsername(jwt);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // ✅ temporarily comment out expiration check for testing
-            // if (!jwtService.isTokenExpired(jwt)) {
             String role = jwtService.extractRole(jwt);
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
 
@@ -60,10 +58,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            System.out.println("🛠️ Setting authentication for: " + userEmail + " with role: " + role);
+            System.out.println("Setting authentication for: " + userEmail + " with role: " + role);
             SecurityContextHolder.getContext().setAuthentication(authToken);
-            System.out.println("✅ SecurityContext set. Authorities = " + authToken.getAuthorities());
-            // }
+            System.out.println("SecurityContext set. Authorities = " + authToken.getAuthorities());
+
         }
 
 

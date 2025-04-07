@@ -45,7 +45,6 @@ public class CourseController {
     }
 
     //Update a course
-
     @PreAuthorize(" hasRole('INSTRUCTOR')")
     @PutMapping("/{id}")
 

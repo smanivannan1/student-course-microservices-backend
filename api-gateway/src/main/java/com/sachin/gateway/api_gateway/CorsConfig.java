@@ -21,10 +21,12 @@ public class CorsConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        source.registerCorsConfiguration("/api/auth/**", config); // Only apply CORS for authentication routes
-        source.registerCorsConfiguration("/api/users/**", config);  // Same for other secure routes
 
         System.out.println("✅ CorsWebFilter loaded");
+        System.out.println("CORS config applied to path /** with:");
+        System.out.println("  Origins: " + config.getAllowedOrigins());
+        System.out.println("  Methods: " + config.getAllowedMethods());
+        System.out.println("  Headers: " + config.getAllowedHeaders());
         return new CorsWebFilter(source);
     }
 }

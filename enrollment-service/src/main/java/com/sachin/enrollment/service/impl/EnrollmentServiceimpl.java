@@ -63,7 +63,7 @@ public class EnrollmentServiceimpl implements EnrollmentService {
         try {
             enrollmentEventPublisher.sendEnrollmentNotification(message);
         } catch (Exception e) {
-            System.err.println("⚠️ Failed to send enrollment notification: " + e.getMessage());
+            System.err.println("Failed to send enrollment notification: " + e.getMessage());
         }
 
         return EnrollmentMapper.mapToEnrollmentDto(savedEnrollment);
@@ -98,12 +98,11 @@ public class EnrollmentServiceimpl implements EnrollmentService {
             message = student.getName() + " has been successfully unenrolled from " + course.getCourseName();
         }
 
-        // 🛡️ Protect the event publishing
+        //Protect the event publishing
         try {
             enrollmentEventPublisher.sendEnrollmentNotification(message);
         } catch (Exception e) {
             System.err.println("⚠️ Failed to send unenrollment notification: " + e.getMessage());
-            // Optional: log to file or monitoring service
         }
 
         return message;
@@ -111,18 +110,18 @@ public class EnrollmentServiceimpl implements EnrollmentService {
 
     @Override
     public List<CourseDto> getEnrolledCoursesforStudent(Long studentId) {
-        // ✅ Validate that the student exists
+        // Validate that the student exists
         UserDto student = userClient.getUserById(studentId);
         if (!student.getRole().equalsIgnoreCase("STUDENT")) {
             throw new IllegalStateException("Only students can have course enrollments.");
         }
 
-        // ✅ Fetch ACTIVE enrollments for the student
+        //Fetch ACTIVE enrollments for the student
         List<Enrollment> enrollmentList = enrollmentRepository.findByUserIdAndStatus(studentId, EnrollmentStatus.ACTIVE);
         if (enrollmentList.isEmpty()) {
             throw new IllegalStateException("No active enrollments found for student ID: " + studentId);
         }
-        // ✅ Map to DTOs
+        // Map to DTOs
         return enrollmentList.stream()
                 .map(enrollment -> courseClient.getCourseById(enrollment.getCourseId()))
                 .toList();

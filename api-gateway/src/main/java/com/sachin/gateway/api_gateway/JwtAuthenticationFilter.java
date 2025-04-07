@@ -23,12 +23,12 @@ public class JwtAuthenticationFilter implements GatewayFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getPath().toString();
-        System.out.println("🛡️ JWT Filter triggered for path: " + path);
+        System.out.println("JWT Filter triggered for path: " + path);
 
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("❌ No token provided or bad Authorization header. Rejecting request.");
+            System.out.println("No token provided or bad Authorization header. Rejecting request.");
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
             String userEmail = claims.getSubject();
             String role = claims.get("role", String.class);
 
-            System.out.println("✅ Token is valid. User: " + userEmail + ", Role: " + role);
+            System.out.println("Token is valid. User: " + userEmail + ", Role: " + role);
 
             exchange = exchange.mutate()
                     .request(r -> r.headers(headers -> {
@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
                     .build();
 
         } catch (Exception e) {
-            System.out.println("❌ Token invalid or expired. Rejecting request.");
+            System.out.println("Token invalid or expired. Rejecting request.");
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }

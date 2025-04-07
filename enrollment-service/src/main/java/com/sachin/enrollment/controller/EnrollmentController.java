@@ -61,13 +61,13 @@ public class EnrollmentController {
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/test/student")
     public ResponseEntity<String> testStudentAccess() {
-        return ResponseEntity.ok("✅ STUDENT access confirmed.");
+        return ResponseEntity.ok("STUDENT access confirmed.");
     }
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("/test/instructor")
     public ResponseEntity<String> testInstructorAccess() {
-        return ResponseEntity.ok("✅ INSTRUCTOR access confirmed.");
+        return ResponseEntity.ok("INSTRUCTOR access confirmed.");
     }
 }
 
