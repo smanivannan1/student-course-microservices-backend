@@ -22,10 +22,9 @@ public class GatewayConfig {
         return builder.routes()
 
                 // Protect user-service routes
-                //ALLOW register & login without token
                 .route("user-auth", r -> r.path("/api/auth/register", "/api/auth/login")
                         .and()
-                        .method("OPTIONS", "POST") // 👈 Handle preflight and login POST
+                        .method("OPTIONS", "POST") // Handle preflight and login POST
                         .uri("lb://user-service"))
 
                 .route("user-service-secure", r -> r.path("/api/users/**")
@@ -42,6 +41,18 @@ public class GatewayConfig {
                 .route("enrollment-service", r -> r.path("/api/enrollments/**")
                         .filters(f -> f.filter(jwtAuthFilter))
                         .uri("lb://enrollment-service"))
+
+                .route("assignment-service", r -> r.path("/api/assignments/**")
+                        .filters(f -> f.filter(jwtAuthFilter))
+                        .uri("lb://assignment-service"))
+
+                .route("submission-service", r -> r.path("/api/submissions/**")
+                        .filters(f -> f.filter(jwtAuthFilter))
+                        .uri("lb://submission-service"))
+
+                .route("gradebook-service", r -> r.path("/api/gradebook/**")
+                        .filters(f -> f.filter(jwtAuthFilter))
+                        .uri("lb://gradebook-service"))
 
                 .build();
     }

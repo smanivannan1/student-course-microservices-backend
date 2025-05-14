@@ -37,7 +37,7 @@ public class CourseController {
 
 
     //Find a course by ID
-    @PreAuthorize("hasRole('STUDENT') or hasRole('INSTRUCTOR')")
+    @PreAuthorize("permitAll()") // ← TEMP
     @GetMapping("/{id}")
     public ResponseEntity<CourseDto> getCoursebyID(@PathVariable("id") Long courseId){
         CourseDto courseDto = courseService.getCoursebyId(courseId);

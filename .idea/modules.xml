@@ -3,9 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Project Microservices.iml" filepath="$PROJECT_DIR$/.idea/Project Microservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/assignment-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/assignment-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/course-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/course-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/enrollment-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/enrollment-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradebook-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gradebook-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/notification-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/notification-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/submission-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/submission-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service.main.iml" />
     </modules>
   </component>

@@ -29,7 +29,7 @@ public class UserController {
     }
 
     //Get User by ID REST API
-    @PreAuthorize("hasRole('STUDENT') or hasRole('INSTRUCTOR')")
+    @PreAuthorize("permitAll()") // ← TEMPORARY
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id")Long userId){
         UserDto userDto = userService.getUserById(userId);
@@ -38,7 +38,7 @@ public class UserController {
 
 
     //Get all Users
-    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('INSTRUCTOR')")
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers(){
         List<UserDto> userDtoList = userService.getAllUsers();
@@ -73,5 +73,10 @@ public class UserController {
     public ResponseEntity<UserDto> searchUser(@RequestParam String query) {
         UserDto user = userService.searchByUsernameOrNameOrEmail(query.trim());
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<List<UserDto>> getUsersByIds(@RequestBody List<Long> ids) {
+        return ResponseEntity.ok(userService.getUsersByIds(ids));
     }
 }

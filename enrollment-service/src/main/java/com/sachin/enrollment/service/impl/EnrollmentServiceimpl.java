@@ -140,4 +140,19 @@ public class EnrollmentServiceimpl implements EnrollmentService {
                 .toList();
     }
 
+    @Override
+    public List<UserDto> getStudentsByCourseId(Long courseId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByCourseIdAndStatus(courseId, EnrollmentStatus.ACTIVE);
+
+        List<Long> userIds = enrollments.stream()
+                .map(Enrollment::getUserId)
+                .collect(Collectors.toList());
+
+        List<UserDto> allUsers = userClient.getUsersByIds(userIds);
+
+        return allUsers.stream()
+                .filter(user -> "STUDENT".equalsIgnoreCase(user.getRole()))
+                .collect(Collectors.toList());
+    }
+
 }

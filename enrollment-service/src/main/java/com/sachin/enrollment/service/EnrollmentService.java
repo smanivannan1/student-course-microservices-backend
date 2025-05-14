@@ -16,4 +16,7 @@ public interface EnrollmentService {
 
     List<EnrollmentDto> getAllEnrollments();
 
+    List<UserDto> getStudentsByCourseId(Long courseId);
+
+
 }

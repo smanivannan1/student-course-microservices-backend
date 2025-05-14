@@ -16,7 +16,7 @@ public class RegisterRequestDto {
 
     private String password;
 
-    private Role role; // Optional — default to "STUDENT" in your service if not provided
+    private Role role;
 
 
 

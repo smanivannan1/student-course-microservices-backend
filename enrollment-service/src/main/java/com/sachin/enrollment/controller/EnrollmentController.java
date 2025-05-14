@@ -40,7 +40,6 @@ public class EnrollmentController {
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasRole('STUDENT') or hasRole('INSTRUCTOR')")
     @GetMapping("/{studentId}")
     public ResponseEntity<List<CourseDto>> getEnrolledCoursesForStudent(
             @PathVariable Long studentId
@@ -69,5 +68,15 @@ public class EnrollmentController {
     public ResponseEntity<String> testInstructorAccess() {
         return ResponseEntity.ok("INSTRUCTOR access confirmed.");
     }
+
+    @PreAuthorize("hasRole('STUDENT') or hasRole('INSTRUCTOR')")
+    @GetMapping("/course/{courseId}/students")
+    public ResponseEntity<List<UserDto>> getStudentsByCourse(@PathVariable Long courseId) {
+        List<UserDto> students = enrollmentService.getStudentsByCourseId(courseId);
+        return ResponseEntity.ok(students);
+    }
+
 }
+
+
 

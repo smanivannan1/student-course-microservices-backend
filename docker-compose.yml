@@ -91,6 +91,42 @@ services:
     networks:
       - backend
 
+  submission-service:
+    build:
+      context: ./submission-service
+    container_name: submission-service
+    ports:
+      - "8085:8080"
+    depends_on:
+      - discovery-service
+      - rabbitmq
+    networks:
+      - backend
+
+  assignment-service:
+    build:
+      context: ./assignment-service
+    container_name: assignment-service
+    ports:
+      - "8086:8080"
+    depends_on:
+      - discovery-service
+      - rabbitmq
+    networks:
+      - backend
+
+  gradebook-service:
+    build:
+      context: ./gradebook-service
+    container_name: gradebook-service
+    ports:
+      - "8087:8080"
+    depends_on:
+      - discovery-service
+      - rabbitmq
+    networks:
+      - backend
+
   frontend:
     build:
       context: ../student-course-frontend
@@ -107,4 +143,3 @@ networks:
 
 volumes:
   pgdata:
-

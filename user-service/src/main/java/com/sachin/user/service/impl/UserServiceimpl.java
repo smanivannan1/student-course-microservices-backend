@@ -35,6 +35,15 @@ public class UserServiceimpl implements UserService{
     }
 
     @Override
+    public List<UserDto> getUsersByIds(List<Long> ids) {
+        List<User> users = userRepository.findAllById(ids);
+        return users.stream()
+                .map(UserMapper::maptoUserDto)  // Use your UserMapper here
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public List<UserDto> getAllUsers() {
         List<User> userList = userRepository.findAll();
         List<UserDto> userDtoList = new ArrayList<>();
